@@ -1,23 +1,48 @@
-import logo from './logo.svg';
+
 import './App.css';
 
+
 function App() {
+  const base_url = process.env.REACT_APP_BASE_URL
+
+  const orderData = {
+    title: "bizcochito",
+    quantity: "1",
+    price: "100"
+  };
+
+
+
+  const httpPostRequest = async ()=>{
+   const response = await fetch(`${base_url}/create_preference`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderData),
+    })
+    const responseJSON = await response.json();
+    return responseJSON
+  }
+  
+  const redirect = (url)=>{
+    window.location.href = url
+
+  }
+
+  const handleClick = async ()=>{
+    const res = await httpPostRequest();
+    redirect(res.response.body.init_point)
+  }
+
+
+
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={handleClick}>comprame un bizcochito</button>
+     
     </div>
   );
 }
